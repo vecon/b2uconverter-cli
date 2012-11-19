@@ -1,0 +1,3 @@
+[submodule "b2uconverter"]
+	path = b2uconverter
+	url = git://github.com/myguidingstar/B2Uconverter.git
