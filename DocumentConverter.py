@@ -23,13 +23,12 @@ FAMILY_PRESENTATION = "Presentation"
 FAMILY_DRAWING = "Drawing"
 
 # B2U
-from B2UConverter import *
-parser = OOoDocumentParser()
-vnConverter = VietnameseTextConverter(decoderPrefix='internal_')
-oVnConverter = OOoVietnameseTextConverter(vnConverter)
-parser.setTextPortionConverter(oVnConverter)
+from B2UConverter import OOoDocumentParser, VietnameseTextConverter, OOoVietnameseTextConverter
 
-# B2U
+import sys
+import logging
+#import traceback
+import os
 #---------------------#
 # Configuration Start #
 #---------------------#
@@ -130,6 +129,11 @@ class DocumentConversionException(Exception):
 class DocumentConverter:
 
     def __init__(self, port=DEFAULT_OPENOFFICE_PORT):
+        self.parser = OOoDocumentParser()
+        self.vnConverter = VietnameseTextConverter(decoderPrefix='internal_')
+        self.oVnConverter = OOoVietnameseTextConverter(self.vnConverter)
+        self.parser.setTextPortionConverter(self.oVnConverter)
+
         localContext = uno.getComponentContext()
         resolver = localContext.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", localContext)
         try:
@@ -137,6 +141,29 @@ class DocumentConverter:
         except NoConnectException:
             raise DocumentConversionException, "failed to connect to OpenOffice.org on port %s" % port
         self.desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
+        self._setupLogging()
+
+    def _setupLogging(self):
+        filename = './converter.log'
+        old_umask = os.umask(0077)
+        # TODO: check if it fails and take countermesure in this case
+        loglevel = logging.DEBUG # or logging.INFO
+        logging.root.setLevel(loglevel)
+        logging.basicConfig(
+            format='%(asctime)s %(levelname)s %(message)s',
+            filename=os.path.expanduser(filename),
+            filemode='w')
+        os.umask(old_umask)
+        logging.info("B2UConverter loaded (Python %s)", sys.version)
+
+    def _error_message(self, error_count):
+        if error_count > 1:
+            message = "with %s errors" % error_count
+        elif error_count > 0:
+            message = "with %s error" % error_count
+        else:
+            message = "without error"
+        return message
 
     def convert(self, inputFile, outputFile):
 
@@ -153,7 +180,10 @@ class DocumentConverter:
             document.refresh()
         except AttributeError:
             pass
-        parser.processDocument(document)
+        self.parser.processDocument(document)
+        errmsg = self._error_message(self.parser.stats['errors'])
+        logging.info("Conversion completed (%s).", errmsg)
+
 
         family = self._detectFamily(document)
         self._overridePageStyleProperties(document, family)
