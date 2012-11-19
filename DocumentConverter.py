@@ -153,6 +153,7 @@ class DocumentConverter:
             document.refresh()
         except AttributeError:
             pass
+        parser.processDocument(document)
 
         family = self._detectFamily(document)
         self._overridePageStyleProperties(document, family)
