@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>B2uconverter-cli by myguidingstar</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>B2uconverter-cli</h1>
+        <p>Python script to automate Vietnamese encoding conversions using LibreOffice/OpenOffice.org</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/myguidingstar/b2uconverter-cli" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/myguidingstar/b2uconverter-cli/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/myguidingstar/b2uconverter-cli/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>B2UConverter-CLI</h1>
+
+<p>B2UConverter-CLI is a command-line interface for <a href="https://github.com/myguidingstar/B2Uconverter/">B2Uconverter</a>.</p>
+
+<p>The script was heavily based on <a href="https://github.com/mirkonasato/pyodconverter">PyODConverter</a> and, of course, B2Uconverter.</p>
+
+<h2>Usage</h2>
+
+<p>B2UConverter-CLI requires LibreOffice/OpenOffice.org to be running as a service
+and listening on port (by default) 2002; this can be achieved e.g. by starting
+it from the command line as</p>
+
+<pre><code>$ {PATH_TO_soffice} --headless --nofirststartwizard --accept="socket,host=localhost,port=2012;urp;StarOffice.Service"
+</code></pre>
+
+<p>where <code>{PATH_TO_soffice}</code> is often <code>/usr/lib64/libreoffice/program/soffice</code> or <code>/usr/lib/libreoffice/program/soffice</code></p>
+
+<p>The script expects exactly 2 parameters: an input and an output file names.
+The document formats are inferred from the file extensions.</p>
+
+<p>Since it uses the Python/UNO bridge, the script requires the UNO modules to be
+already present in your Python installation.</p>
+
+<p>on Linux:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/myguidingstar/pyodconverter.git
+<span class="nv">$ </span>git submodule update
+<span class="nv">$ </span>make
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"$PYTHONPATH:{PATH_TO_program}:$PWD"</span>
+<span class="nv">$ </span>python DocumentConverter.py test.odt test.pdf
+</pre></div>
+
+<p>where <code>{PATH_TO_program}</code> is often <code>/usr/lib64/libreoffice/program</code> or <code>/usr/lib/libreoffice/program</code></p>
+
+<p>If you want to write your own scripts in Python, B2UConverter-CLI can also act as
+a Python module, exporting a DocumentConverter class with a very simple API.</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">DocumentConverter</span> <span class="kn">import</span> <span class="n">DocumentConverter</span>
+<span class="n">DocumentConverter</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">"/path/to/some.doc"</span><span class="p">,</span> <span class="s">"/path/to/some.odt"</span><span class="p">)</span>
+</pre></div>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/myguidingstar">myguidingstar</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
